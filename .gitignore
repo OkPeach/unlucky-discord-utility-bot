@@ -1,0 +1,10 @@
+# ignore .env file
+.env
+
+# ignore node_modules
+node_modules/
+package-lock.json
+package.json
+
+# ignore ffmpeg
+ffmpeg.exe
