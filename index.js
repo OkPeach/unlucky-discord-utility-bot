@@ -7,6 +7,8 @@ const PREFIX = process.env.PREFIX;
 
 //admin role and moderator role
 const ADMIN = process.env.ADMINID;
+const ADMIN2 = process.env.ADMIN2ID;
+const ADMIN3 = process.env.ADMIN3ID;
 const MOD = process.env.MODERATORID;
 const HELPER = process.env.HELPERID;
 
@@ -298,7 +300,7 @@ client.on('messageCreate', async message => {
     if ((message.guild === null) === false){
 
         //check if admin
-        if (!message.member.roles.cache.some(role => role.id === ADMIN) && !message.member.roles.cache.some(role => role.id === HELPER) && !message.member.roles.cache.some(role => role.id === MOD)) {
+        if (!message.member.roles.cache.some(role => role.id === ADMIN || ADMIN2|| ADMIN3) && !message.member.roles.cache.some(role => role.id === HELPER) && !message.member.roles.cache.some(role => role.id === MOD)) {
             message.react('❌');
             message.reply('Not high enough role');
             return
@@ -545,7 +547,7 @@ client.on('messageCreate', async message => {
     //purge command
     if (command === "purge") {
         //check if admin
-        if (!message.member.roles.cache.some(role => role.id === ADMIN) && !message.member.roles.cache.some(role => role.id === HELPER) && !message.member.roles.cache.some(role => role.id === MOD)) {
+        if (!message.member.roles.cache.some(role => role.id === ADMIN  || ADMIN2|| ADMIN3) && !message.member.roles.cache.some(role => role.id === HELPER) && !message.member.roles.cache.some(role => role.id === MOD)) {
             message.react('❌');
             message.reply('Not high enough role');
             return
@@ -575,7 +577,7 @@ client.on('messageCreate', async message => {
         //kick command
         if (command === "kick") {
             //check if admin
-            if (!message.member.roles.cache.some(role => role.id === ADMIN) && !message.member.roles.cache.some(role => role.id === HELPER) && !message.member.roles.cache.some(role => role.id === ADMIN)) {
+            if (!message.member.roles.cache.some(role => role.id === ADMIN  || ADMIN2|| ADMIN3) && !message.member.roles.cache.some(role => role.id === HELPER) && !message.member.roles.cache.some(role => role.id === ADMIN)) {
                 message.react('❌');
                 message.reply('Not high enough role');
                 return
