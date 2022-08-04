@@ -903,8 +903,7 @@ client.on('messageCreate', async message => {
         const embedMessage =  new Discord.MessageEmbed()
 
         const ips = [
-            'mc.unlucky.life',
-            'vegas.unlucky.life'
+            'mc.unlucky.life'
         ]
 
         waiting = ips.length * 10000 - 9500;
@@ -1015,6 +1014,44 @@ client.on('messageCreate', async message => {
 
     });
 
+    }
+
+    if (command === 'mojangapi' || command === 'mojang') {
+        function mojang() {
+            // send a request to mojang
+            request('https://api.mojang.com/', (error, response, body) => {
+                //parse json
+                let json = JSON.parse(body);
+
+                //embed stuff
+                const embedMessage =  new Discord.MessageEmbed()
+                embedMessage.setColor(
+                   emColor
+                )
+                embedMessage.setFooter({
+                    text: `Unlucky bot | Made by PeachWRLD#8888`
+                })
+                embedMessage.setTimestamp(new Date().getTime());
+                
+                embedMessage.setTitle('Mojang API status')
+
+                embedMessage.setDescription(
+                    "**Status: " + json.Status + "**"
+                );
+
+                embedMessage.setImage("https://www.minecraft.net/content/dam/games/minecraft/logos/Mojang2020Logo.png");
+
+                message.react('✅');
+
+                message.channel.send({
+                    embeds: [embedMessage]
+                });
+
+            });
+        }
+
+        //call function
+        mojang();
     }
 
 
