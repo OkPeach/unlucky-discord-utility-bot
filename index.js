@@ -33,6 +33,8 @@ const Twitter = require('twit');
 
 var pinger = require("minecraft-pinger")
 
+const Jimp = require("jimp");
+
 //import yt
 const ytdl = require('ytdl-core');
 
@@ -899,27 +901,55 @@ client.on('messageCreate', async message => {
 
     //servers command
     if (command === 'servers' || command === 'mc') {
+        const embedMessage =  new Discord.MessageEmbed();
+        const fs = require('fs');
 
-        const embedMessage =  new Discord.MessageEmbed()
+        isServer = false;
+
+        let address = args.slice(0).join(' ');
+
+        if (address === '') {
+            address = 'mc.unlucky.life'
+        }
 
         const ips = [
-            'mc.unlucky.life'
+            address
         ]
 
         waiting = ips.length * 10000 - 9500;
         waits = waiting/1000;
 
+        try {
         for (const ipss of ips) {
             pinger.ping(ipss, 25565, (error, result) => {
             if (error) {
-                embedMessage.addField("❌", `**${ipss}**` + '`' +  ` is offline! ${error}` + '`', false);
+                embedMessage.setDescription(
+                    "❌ " + `**${ipss}**` + '`' +  ` is offline! ${error}` + '`'
+                );
                 return;
             }
-            embedMessage.addField("✅", `**${ipss}**` + '`' +  ` is online! Ping: ${result.ping}, Version: ${result.version.name}, Players: ${result.players.online}/${result.players.max}` + '`', false)
+            var data = result.favicon.replace(/^data:image\/png;base64,/, "");
+
+            var buffer = Buffer.from(data, "base64");
+
+            fs.writeFileSync('server.png', buffer);
+
+            embedMessage.setThumbnail('attachment://server.png')
+
+            embedMessage.setDescription(
+                "✅ " + `**${ipss}**` +  ` is online! \nPing: ${result.ping}, Version: ${result.version.name}\nPlayers: ${result.players.online}/${result.players.max}`
+            );
+            isServer = true;
         })
         }
+        }
+        catch {
+            embedMessage.setDescription(
+                "Something went wrong!"
+            );
+        }
         
-        message.reply('Waiting ' + waits + 's for pings to come back!') 
+        //message.reply('Waiting ' + waits + 's for pings to come back!') 
 
         await new Promise(resolve => setTimeout(resolve, waiting));
 
@@ -930,13 +960,35 @@ client.on('messageCreate', async message => {
                 text: `Unlucky bot | Made by PeachWRLD#8888`
             });
             embedMessage.setTimestamp(new Date().getTime());
-            embedMessage.setTitle('servers');
+            embedMessage.setTitle('Minecraft uptime checker');
 
         message.react('✅');
 
-        message.channel.send({
-            embeds: [embedMessage]
-        });
+        if(!isServer) {
+            message.channel.send({
+                embeds: [embedMessage],
+            }); 
+        } 
+        else {
+            message.channel.send({
+                embeds: [embedMessage],
+                files: [{
+                    attachment:'server.png',
+                    name:'server.png'
+                }]
+            }); 
+        }
+
+        await new Promise(resolve => setTimeout(resolve, waiting));
+
+        const path = './server.png'
+
+        try {
+            fs.unlinkSync(path)
+            //file removed
+        } catch(err) {
+            console.error(err)
+        }   
     }
 
     if (command === 'eur') {
@@ -1039,7 +1091,7 @@ client.on('messageCreate', async message => {
                     "**Status: " + json.Status + "**"
                 );
 
-                embedMessage.setImage("https://www.minecraft.net/content/dam/games/minecraft/logos/Mojang2020Logo.png");
+                embedMessage.setThumbnail('https://upload.wikimedia.org/wikipedia/en/thumb/8/83/Mojang_Studios_logo_2020.svg/1200px-Mojang_Studios_logo_2020.svg.png');
 
                 message.react('✅');
 
