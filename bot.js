@@ -174,6 +174,38 @@ client.on('ready', () => {
     else {
         console.log('Elo clown is enabled')
     }
+
+    const gamerGuildID = process.env.GSERVERID;
+    const gamerGuild = client.guilds.cache.get(gamerGuildID)
+    let commands
+
+    if (gamerGuild) {
+        commands = gamerGuild.commands
+    }
+    else {
+        commands = client.application?.commands
+    }
+
+    commands?.create({
+    name: 'ping',
+    description: 'penis command for developer badge Praygi'
+})
+})
+
+//slash ping command
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isCommand()) {
+        return
+    }
+
+    const { commandName, options } = interaction
+
+    if (commandName==='ping') {
+        interaction.reply({
+            content: 'pong',
+            ephemeral: false
+        })
+    }
 })
 
 //time
