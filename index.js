@@ -233,8 +233,9 @@ client.on('guildMemberAdd', guildMember => {
         guildMember.roles.add(plebrole);
     }
     if (guildMember.guild.id === gamingServer) {
-        var gamerRole = guildMember.guild.roles.cache.find(role => role.id === gamerRole);
-        guildMember.roles.add(gamerRole);
+        var gamerrole = guildMember.guild.roles.cache.find(role => role.id === gamerRole);
+        guildMember.roles.add(gamerrole);
+        guildMember.guild.systemChannel.send(`**<@${guildMember.user.id}> your new role has been assigned!**`);
     }
 });
 
