@@ -221,6 +221,9 @@ client.on('guildCreate', guild => {
 const devServer = process.env.DEVSERVERID;
 const plebRole = process.env.PLEBID;
 
+const gamingServer = process.env.GSERVERID;
+const gamerRole = process.env.GID;
+
 //welcome new members
 client.on('guildMemberAdd', guildMember => {
     guildMember.guild.systemChannel.send(`**Welcome to the ${guildMember.guild.name}, <@${guildMember.user.id}>!**`);
@@ -228,6 +231,10 @@ client.on('guildMemberAdd', guildMember => {
     if (guildMember.guild.id === devServer) {
         var plebrole = guildMember.guild.roles.cache.find(role => role.id === plebRole);
         guildMember.roles.add(plebrole);
+    }
+    if (guildMember.guild.id === gamingServer) {
+        var gamerRole = guildMember.guild.roles.cache.find(role => role.id === gamerRole);
+        guildMember.roles.add(gamerRole);
     }
 });
 
