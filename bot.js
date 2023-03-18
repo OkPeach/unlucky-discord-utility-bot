@@ -201,8 +201,9 @@ client.on('interactionCreate', async (interaction) => {
     const { commandName, options } = interaction
 
     if (commandName==='ping') {
+        latency = interaction.createdTimestamp - Date.now();
         interaction.reply({
-            content: 'pong',
+            content: `Bot Latency is ${Math.round(latency/1000)}ms. API Latency is ${Math.round(client.ws.ping)}ms`,
             ephemeral: false
         })
     }
