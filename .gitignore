@@ -7,7 +7,7 @@ package-lock.json
 package.json
 
 # ignore ffmpeg
-ffmpeg.exe
+#ffmpeg.exe
 
 
 # ignore .png files
