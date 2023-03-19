@@ -187,23 +187,63 @@ client.on('ready', () => {
     }
 
     commands?.create({
-    name: 'ping',
-    description: 'penis command for developer badge Praygi'
-})
+        name: 'ping',
+        description: 'somewhat broken ping command'
+    })
+    commands?.create({
+        name: 'help',
+        description: 'shows all / "slash" commands I can do'
+    })
+    commands?.create({
+        name: 'penis',
+        description: 'shows penis size of tagged user',
+        options: [
+            {
+                name: 'user',
+                description: 'user in search of his penis size',
+                required: true,
+                type: Discord.Constants.ApplicationCommandOptionTypes.USER
+            }
+        ]
+    })
 })
 
-//slash ping command
+//slash ping commands
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) {
         return
     }
 
     const { commandName, options } = interaction
-
-    if (commandName==='ping') {
+    
+    //ping slash command
+    if (commandName === 'ping') {
         latency = interaction.createdTimestamp - Date.now();
         interaction.reply({
             content: `Bot Latency is ${Math.round(latency/1000)}ms. API Latency is ${Math.round(client.ws.ping)}ms`,
+            ephemeral: false
+        })
+    }
+    //penis slash command
+    else if (commandName === 'penis') {
+        const user = options.getUser('user')
+        ppSize = getRandomInt(20)
+        penis = ""
+
+        for(var i = 0; i <= ppSize; i++) {
+            penis += "=";
+        }
+
+        interaction.reply({
+            content: `${user}'s penis size is ${ppSize}cm. 8${penis}D💦`,
+            ephemeral: false
+        })
+    }
+    //help command
+    else if (commandName === 'help') {
+        latency = interaction.createdTimestamp - Date.now();
+        interaction.reply({
+            content: '```Currently I can do 3 slash commands:\n>/help - shows this menu\n>/ping - posts probably broken ping stuff\n>/penis size - what a way to flex on your homies```',
             ephemeral: false
         })
     }
