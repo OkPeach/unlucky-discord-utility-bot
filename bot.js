@@ -247,7 +247,7 @@ client.on('interactionCreate', async (interaction) => {
     else if (commandName === 'help') {
         latency = interaction.createdTimestamp - Date.now();
         interaction.reply({
-            content: '```Currently I can do 3 slash commands:\n> /help - shows this menu\n> /ping - posts probably broken ping stuff\n> /penis size - what a way to flex on your homies```',
+            content: '```Currently I can do 3 slash commands:\n> /help - shows this menu\n> /ping - posts probably broken ping stuff\n> /penis size - what a way to flex on your homies\n> /uptime - shows uptime of the bot```',
             ephemeral: false
         })
     }
