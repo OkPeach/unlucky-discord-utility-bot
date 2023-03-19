@@ -195,6 +195,10 @@ client.on('ready', () => {
         description: 'shows all / "slash" commands I can do'
     })
     commands?.create({
+        name: 'uptime',
+        description: 'shows the bots uptime'
+    })
+    commands?.create({
         name: 'penis',
         description: 'shows penis size of tagged user',
         options: [
@@ -244,6 +248,21 @@ client.on('interactionCreate', async (interaction) => {
         latency = interaction.createdTimestamp - Date.now();
         interaction.reply({
             content: '```Currently I can do 3 slash commands:\n> /help - shows this menu\n> /ping - posts probably broken ping stuff\n> /penis size - what a way to flex on your homies```',
+            ephemeral: false
+        })
+    }
+    else if (commandName === 'uptime') {
+        let totalSeconds = (client.uptime / 1000);
+        let days = Math.floor(totalSeconds / 86400);
+        totalSeconds %= 86400;
+        let hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = Math.floor(totalSeconds % 60);
+
+        let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`;
+        interaction.reply({
+            content: `My current uptime is ${uptime}`,
             ephemeral: false
         })
     }
