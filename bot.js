@@ -230,7 +230,7 @@ client.on('interactionCreate', async (interaction) => {
         ppSize = getRandomInt(20)
         penis = ""
 
-        for(var i = 0; i <= ppSize; i++) {
+        for(var i = 0; i < ppSize; i++) {
             penis += "=";
         }
 
