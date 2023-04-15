@@ -36,7 +36,8 @@ var pinger = require("minecraft-pinger")
 const Jimp = require("jimp");
 
 //import yt
-const ytdl = require('ytdl-core');
+//const ytdl = require('ytdl-core');
+const ytdl = require('ytdl-core-discord');
 
 //import request
 const request = require('request');
@@ -753,7 +754,11 @@ client.on('messageCreate', async message => {
 
         //create player and resource to play from
         const player = voiceDiscord.createAudioPlayer();
-		const resource = ytdl(song, { filter: 'audioonly' });
+		const resource = play()
+
+        async function play(connection, url) {
+            connection.play(await ytdl(url), { type: 'opus' });
+          }
 
         //connect
 		const connection = voiceDiscord.joinVoiceChannel({
@@ -777,6 +782,20 @@ client.on('messageCreate', async message => {
         catch(err){
             console.log(err);
         }
+    }
+
+    if (command === 'testing') {
+        const streamOptions = { seek: 0, volume: 1 };
+        var voiceChannel = message.member.voiceChannel;
+        voiceChannel.join().then(connection => {
+            console.log("joined channel");
+            const stream = ytdl('https://www.youtube.com/watch?v=gOMhN-hfMtY', { filter : 'audioonly' });
+            const dispatcher = connection.playStream(stream, streamOptions);
+            dispatcher.on("end", end => {
+                console.log("left channel");
+                voiceChannel.leave();
+            });
+        }).catch(err => console.log(err));
     }
 
     if (command === 'disconnect' || command === 'dc')
