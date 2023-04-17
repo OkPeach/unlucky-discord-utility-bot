@@ -231,8 +231,16 @@ client.on('interactionCreate', async (interaction) => {
     //penis slash command
     else if (commandName === 'penis') {
         const user = options.getUser('user')
-        ppSize = getRandomInt(20)
         penis = ""
+
+        let lucien = client.users.cache.get("353871885722845188");
+
+        if (user == lucien) {
+            ppSize = 25;
+        }
+        else {
+            ppSize = getRandomInt(20)
+        }
 
         for(var i = 0; i < ppSize; i++) {
             penis += "=";
