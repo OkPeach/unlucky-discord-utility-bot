@@ -240,10 +240,10 @@ client.on('interactionCreate', async (interaction) => {
         if (user == lucien) {
             ppSize = 25;
         }
-        if (user == kevin) {
+        else if (user == kevin) {
             ppSize = 0;
         }
-        if (user == elopi) {
+        else if (user == elopi) {
             ppSize = 10;
         }
         else {
