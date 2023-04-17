@@ -234,9 +234,17 @@ client.on('interactionCreate', async (interaction) => {
         penis = ""
 
         let lucien = client.users.cache.get("353871885722845188");
+        let kevin = client.users.cache.get("555464519888011307");
+        let elopi = client.users.cache.get("329305299997556738");
 
         if (user == lucien) {
             ppSize = 25;
+        }
+        if (user == kevin) {
+            ppSize = 0;
+        }
+        if (user == elopi) {
+            ppSize = 10;
         }
         else {
             ppSize = getRandomInt(20)
