@@ -1052,6 +1052,7 @@ client.on('messageCreate', async message => {
                     embedMessage.setDescription(
                         "✅ " + `**${address}**` + ` is online!`
                     );
+                    isServer = true;
                 }
 
                 var data = result.icon.replace(/^data:image\/png;base64,/, "");
