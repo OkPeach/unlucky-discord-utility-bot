@@ -1043,6 +1043,10 @@ client.on('messageCreate', async message => {
             mcExplorer.serverInfo.getServer("mc.unlucky.life").then((result) => {
                 console.log(result);
               });
+
+              temparray.forEach(entry => {
+                embedMessage.addField(entry, 'looped field');
+              });
         }
         catch {
             embedMessage.setDescription(
