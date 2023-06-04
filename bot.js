@@ -1043,8 +1043,8 @@ client.on('messageCreate', async message => {
             mcExplorer.serverInfo.getServer("mc.unlucky.life").then((result) => {
                 console.log(result);
                 embedMessage.addFields(
-                    {name: result.motd.clean, value: '\u200b', inline: false},
-                    {name: result.motd.clean, value: '\u200b', inline: false}
+                    {name: result.motd.clean[0], value: '\u200b', inline: false},
+                    {name: result.motd.clean[1], value: '\u200b', inline: false}
                 );
               });
         }
