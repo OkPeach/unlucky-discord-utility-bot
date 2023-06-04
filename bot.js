@@ -1044,8 +1044,8 @@ client.on('messageCreate', async message => {
                 console.log(result);
               });
 
-              temparray.forEach(entry => {
-                embedMessage.addField(entry, 'looped field');
+              temparray.forEach(yeo => {
+                embedMessage.addField(result.motd.clean, 'looped field');
               });
         }
         catch {
