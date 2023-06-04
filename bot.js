@@ -1042,9 +1042,20 @@ client.on('messageCreate', async message => {
         try {
             mcExplorer.serverInfo.getServer("mc.unlucky.life").then((result) => {
                 console.log(result);
+                if (!result.online) {
+                    embedMessage.setDescription(
+                        "❌ " + `**${ipss}**` + '`' +  ` is offline! ${error}` + '`'
+                    );
+                    return;
+                }
+                else {
+                    embedMessage.setDescription(
+                        "✅ " + `**${ipss}**` + '`' +  ` is online!` + '`'
+                    );
+                }
                 embedMessage.addFields(
-                    {name: result.motd.clean[0], value: '\u200b', inline: false},
-                    {name: result.motd.clean[1], value: '\u200b', inline: false}
+                    {name: 'Players:', value: result.players.online + '/' + result.players.max, inline: false},
+                    {name: 'MOTD:', value: result.motd.clean[0] + '\n' + result.motd.clean[1], inline: false},
                 );
               });
         }
