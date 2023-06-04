@@ -1044,13 +1044,13 @@ client.on('messageCreate', async message => {
                 console.log(result);
                 if (!result.online) {
                     embedMessage.setDescription(
-                        "❌ " + `**${ipss}**` + '`' +  ` is offline! ${error}` + '`'
+                        "❌ " + `**${address}**` + '`' +  ` is offline! ${error}` + '`'
                     );
                     return;
                 }
                 else {
                     embedMessage.setDescription(
-                        "✅ " + `**${ipss}**` + '`' +  ` is online!` + '`'
+                        "✅ " + `**${address}**` + '`' +  ` is online!` + '`'
                     );
                 }
                 embedMessage.addFields(
