@@ -1044,15 +1044,24 @@ client.on('messageCreate', async message => {
                 console.log(result);
                 if (!result.online) {
                     embedMessage.setDescription(
-                        "❌ " + `**${address}**` + '`' +  ` is offline! ${error}` + '`'
+                        "❌ " + `**${address}**` + ` is offline!`
                     );
                     return;
                 }
                 else {
                     embedMessage.setDescription(
-                        "✅ " + `**${address}**` + '`' +  ` is online!` + '`'
+                        "✅ " + `**${address}**` + ` is online!`
                     );
                 }
+
+                var data = result.icon.replace(/^data:image\/png;base64,/, "");
+
+                var buffer = Buffer.from(data, "base64");
+
+                fs.writeFileSync('server.png', buffer);
+
+                embedMessage.setThumbnail('attachment://server.png')
+
                 embedMessage.addFields(
                     {name: 'Players:', value: result.players.online + '/' + result.players.max, inline: false},
                     {name: 'MOTD:', value: result.motd.clean[0] + '\n' + result.motd.clean[1], inline: false},
