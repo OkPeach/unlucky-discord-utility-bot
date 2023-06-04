@@ -1237,6 +1237,10 @@ client.on('messageCreate', async message => {
     if (command === 'check' || command === 'account' || command === 'mc' || command === 'nc') {
         function mojang() {
             let name = args.slice(0).join(' ');
+
+            if (name === '') {
+                name = 'LucienETH'
+            }
             // send a request to mojang
             request('https://api.ashcon.app/mojang/v2/user/' + name, (error, response, body) => {
                 //parse json
