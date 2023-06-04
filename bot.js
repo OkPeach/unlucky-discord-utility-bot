@@ -33,6 +33,10 @@ const Twitter = require('twit');
 
 var pinger = require("minecraft-pinger")
 
+const { Client: MCExplore } = require("mcexplore");
+
+const mcExplorer = new MCExplore();
+
 const Jimp = require("jimp");
 
 //import yt
@@ -1036,28 +1040,9 @@ client.on('messageCreate', async message => {
         waits = waiting/1000;
 
         try {
-        for (const ipss of ips) {
-            pinger.ping(ipss, 25565, (error, result) => {
-            if (error) {
-                embedMessage.setDescription(
-                    "❌ " + `**${ipss}**` + '`' +  ` is offline! ${error}` + '`'
-                );
-                return;
-            }
-            var data = result.favicon.replace(/^data:image\/png;base64,/, "");
-
-            var buffer = Buffer.from(data, "base64");
-
-            fs.writeFileSync('server.png', buffer);
-
-            embedMessage.setThumbnail('attachment://server.png')
-
-            embedMessage.setDescription(
-                "✅ " + `**${ipss}**` +  ` is online! \nPing: ${result.ping}, Version: ${result.version.name}\nPlayers: ${result.players.online}/${result.players.max}`
-            );
-            isServer = true;
-        })
-        }
+            mcExplorer.serverInfo.getServer("mc.unlucky.life").then((result) => {
+                console.log(result);
+              });
         }
         catch {
             embedMessage.setDescription(
