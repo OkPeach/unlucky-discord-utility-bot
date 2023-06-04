@@ -1040,7 +1040,7 @@ client.on('messageCreate', async message => {
         waits = waiting/1000;
 
         try {
-            mcExplorer.serverInfo.getServer("mc.unlucky.life").then((result) => {
+            mcExplorer.serverInfo.getServer(address).then((result) => {
                 console.log(result);
                 if (!result.online) {
                     embedMessage.setTitle(
