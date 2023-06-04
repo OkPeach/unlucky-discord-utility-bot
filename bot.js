@@ -1020,7 +1020,7 @@ client.on('messageCreate', async message => {
     }
 
     //servers command
-    if (command === 'servers') {
+    if (command === 'server') {
         const embedMessage =  new Discord.MessageEmbed();
         const fs = require('fs');
 
@@ -1043,14 +1043,14 @@ client.on('messageCreate', async message => {
             mcExplorer.serverInfo.getServer("mc.unlucky.life").then((result) => {
                 console.log(result);
                 if (!result.online) {
-                    embedMessage.setDescription(
-                        "❌ " + `**${address}**` + ` is offline!`
+                    embedMessage.setTitle(
+                        "❌ " + `${address}` + ` is offline!`
                     );
                     return;
                 }
                 else {
-                    embedMessage.setDescription(
-                        "✅ " + `**${address}**` + ` is online!`
+                    embedMessage.setTitle(
+                        "✅ " + `${address}` + ` is online!`
                     );
                     isServer = true;
                 }
@@ -1064,7 +1064,9 @@ client.on('messageCreate', async message => {
                 embedMessage.setThumbnail('attachment://server.png')
 
                 embedMessage.addFields(
-                    {name: 'Players:', value: result.players.online + '/' + result.players.max, inline: false},
+                    {name: 'Players:', value: result.players.online + '/' + result.players.max, inline: true},
+                    {name: 'Version:', value: result.protocol_name, inline: true},
+                    {name: 'Software:', value: result.software + ' ' + result.version, inline: true},
                     {name: 'MOTD:', value: result.motd.clean[0] + '\n' + result.motd.clean[1], inline: false},
                 );
               });
@@ -1086,7 +1088,6 @@ client.on('messageCreate', async message => {
                 text: `Unlucky bot | Made by unlucky#8888`
             });
             embedMessage.setTimestamp(new Date().getTime());
-            embedMessage.setTitle('Minecraft uptime checker');
 
         message.react('✅');
 
