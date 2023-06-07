@@ -352,6 +352,7 @@ client.on('guildMemberAdd', guildMember => {
 });
 
 client.on('guildMemberRemove', async member => {
+    console.log(member.user.username);
     guildMember.guild.systemChannel.send(`**Bye bye ${member.user.username}, hope you had fun!**`);
   });
 
