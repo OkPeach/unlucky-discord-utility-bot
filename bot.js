@@ -136,7 +136,7 @@ client.on('ready', () => {
                 );
 
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 });
                 embedMessage.setTimestamp(new Date().getTime());
     
@@ -199,6 +199,18 @@ client.on('ready', () => {
         description: 'shows all / "slash" commands I can do'
     })
     commands?.create({
+        name: 'sb',
+        description: 'Turns item count into how many shulkers you need',
+        options: [
+            {
+                name: 'item count',
+                description: 'item count you want to turn into shulker box count',
+                required: true,
+                type: ApplicationCommandOptionTypes.Number
+            }
+        ]
+    })
+    commands?.create({
         name: 'uptime',
         description: 'shows the bots uptime'
     })
@@ -231,6 +243,16 @@ client.on('interactionCreate', async (interaction) => {
             content: `Bot Latency is ${Math.round(latency/1000)}ms. API Latency is ${Math.round(client.ws.ping)}ms`,
             ephemeral: false
         })
+    }
+    //sb slash command
+    if (commandName === 'sb') {
+            let itemCount = options.getNumber('item count')
+            var sbCount = itemCount / 1728;
+            var sbCountRounded = sbCount.toFixed(2);
+            interaction.reply({
+                content: `You need ${sbCountRounded} shulker boxes to get ${itemCount} items`,
+                ephemeral: false
+            })
     }
     //penis slash command
     else if (commandName === 'penis') {
@@ -312,7 +334,7 @@ client.on('guildCreate', guild => {
                 emColor
             );
             embedMessage.setFooter({
-                text: `Unlucky bot | Made by unlucky#8888`
+                text: `Unlucky bot | Made by unlucky.life`
             });
             embedMessage.setTimestamp(new Date().getTime());
             embedMessage.setTitle('Joined ' + guild.name);
@@ -389,7 +411,7 @@ client.on('messageCreate', async message => {
             emColor
         )
         embedMessage.setFooter({
-            text: `Unlucky bot | Made by unlucky#8888`
+            text: `Unlucky bot | Made by unlucky.life`
         })
         embedMessage.setTimestamp(new Date().getTime());
 
@@ -471,7 +493,7 @@ client.on('messageCreate', async message => {
             emColor
         )
         embedMessage.setFooter({
-            text: `Unlucky bot | By unlucky#8888`
+            text: `Unlucky bot | By unlucky.life`
         })
         embedMessage.setTimestamp(new Date().getTime());
 
@@ -512,7 +534,7 @@ client.on('messageCreate', async message => {
                 emColor
             );
             embedMessage.setFooter({
-                text: `Unlucky bot | Made by unlucky#8888`
+                text: `Unlucky bot | Made by unlucky.life`
             });
             embedMessage.setTimestamp(new Date().getTime());
             embedMessage.setTitle(guild.name);
@@ -551,13 +573,36 @@ client.on('messageCreate', async message => {
             emColor
         )
         embedMessage.setFooter({
-            text: `Unlucky bot | Made by unlucky#8888`
+            text: `Unlucky bot | Made by unlucky.life`
         })
         embedMessage.setTimestamp(new Date().getTime());
 
         message.react('✅');
         const m = await message.reply("Ping?");
         m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms.`);
+    }
+
+    //ping command
+    if (command === 'sb') {
+            const embedMessage =  new Discord.MessageEmbed()
+            embedMessage.setColor(
+                emColor
+            )
+            embedMessage.setFooter({
+                text: `Unlucky bot | Made by unlucky.life`
+            })
+            mbedMessage.setTimestamp(new Date().getTime());
+
+            let itemCount = args.slice(0).join(' ');
+            var sbCount = itemCount / 1728;
+            var sbCountRounded = sbCount.toFixed(2);
+
+            embedMessage.setTitle(`You need ${sbCountRounded} shulker boxes to get ${itemCount} items`);
+
+            message.react('✅');
+            message.channel.send({
+                embeds: [embedMessage]
+            });
     }
 
     //get info about wallet from blockchain.info API and send it in embed message
@@ -568,7 +613,7 @@ client.on('messageCreate', async message => {
             emColor
         )
         embedMessage.setFooter({
-            text: `Unlucky bot | Made by unlucky#8888`
+            text: `Unlucky bot | Made by unlucky.life`
         })
         embedMessage.setTimestamp(new Date().getTime());
 
@@ -623,7 +668,7 @@ client.on('messageCreate', async message => {
             emColor
         )
         embedMessage.setFooter({
-            text: `Unlucky bot | Made by unlucky#8888`
+            text: `Unlucky bot | Made by unlucky.life`
         })
         embedMessage.setTimestamp(new Date().getTime());
 
@@ -881,7 +926,7 @@ client.on('messageCreate', async message => {
             emColor
         )
         embedMessage.setFooter({
-            text: `Unlucky bot | Made by unlucky#8888`
+            text: `Unlucky bot | Made by unlucky.life`
         })
         embedMessage.setTimestamp(new Date().getTime());
 
@@ -937,7 +982,7 @@ client.on('messageCreate', async message => {
                 emColor
             );
             embedMessage.setFooter({
-                text: `Unlucky bot | Made by unlucky#8888 | r = ` + index
+                text: `Unlucky bot | Made by unlucky.life | r = ` + index
             });
             embedMessage.setTimestamp(new Date().getTime());
 
@@ -971,7 +1016,7 @@ client.on('messageCreate', async message => {
                 emColor
             );
             embedMessage.setFooter({
-                text: `Unlucky bot | Made by unlucky#8888`
+                text: `Unlucky bot | Made by unlucky.life`
             });
             embedMessage.setTimestamp(new Date().getTime());
 
@@ -1008,7 +1053,7 @@ client.on('messageCreate', async message => {
                 emColor
             );
             embedMessage.setFooter({
-                text: `Unlucky bot | Made by unlucky#8888`
+                text: `Unlucky bot | Made by unlucky.life`
             });
             embedMessage.setTimestamp(new Date().getTime());
 
@@ -1090,7 +1135,7 @@ client.on('messageCreate', async message => {
                 emColor
             );
             embedMessage.setFooter({
-                text: `Unlucky bot | Made by unlucky#8888`
+                text: `Unlucky bot | Made by unlucky.life`
             });
             embedMessage.setTimestamp(new Date().getTime());
 
@@ -1138,7 +1183,7 @@ client.on('messageCreate', async message => {
                 emColor
             );
             embedMessage.setFooter({
-                text: `Unlucky bot | Made by unlucky#8888`
+                text: `Unlucky bot | Made by unlucky.life`
             });
             embedMessage.setTimestamp(new Date().getTime());
 
@@ -1176,7 +1221,7 @@ client.on('messageCreate', async message => {
                 emColor
             );
             embedMessage.setFooter({
-                text: `Unlucky bot | Made by unlucky#8888`
+                text: `Unlucky bot | Made by unlucky.life`
             });
             embedMessage.setTimestamp(new Date().getTime());
 
@@ -1213,7 +1258,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 
@@ -1257,7 +1302,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 
@@ -1303,7 +1348,7 @@ client.on('messageCreate', async message => {
                 emColor
             );
             embedMessage.setFooter({
-                text: `Unlucky bot | Made by unlucky#8888`
+                text: `Unlucky bot | Made by unlucky.life`
             });
             embedMessage.setTimestamp(new Date().getTime());
             embedMessage.setTitle('Boobies #' + boobnumber);
@@ -1327,7 +1372,7 @@ client.on('messageCreate', async message => {
                 emColor
             );
             embedMessage.setFooter({
-                text: `Unlucky bot | Made by unlucky#8888`
+                text: `Unlucky bot | Made by unlucky.life`
             });
             embedMessage.setTimestamp(new Date().getTime());
             embedMessage.setTitle('Butt #' + buttnumber);
@@ -1354,7 +1399,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 embedMessage.setTitle('Catto #' + json[0].id)
@@ -1387,7 +1432,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 embedMessage.setTitle('Doggo')
@@ -1420,7 +1465,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 embedMessage.setTitle('Fox')
@@ -1453,7 +1498,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 embedMessage.setTitle('Neko')
@@ -1486,7 +1531,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 
@@ -1520,7 +1565,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 
@@ -1554,7 +1599,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 
@@ -1592,7 +1637,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 
@@ -1624,7 +1669,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 embedMessage.setTitle('LEWD')
@@ -1658,7 +1703,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 embedMessage.setTitle('Your new avatar')
@@ -1694,7 +1739,7 @@ client.on('messageCreate', async message => {
                    emColor
                 )
                 embedMessage.setFooter({
-                    text: `Unlucky bot | Made by unlucky#8888`
+                    text: `Unlucky bot | Made by unlucky.life`
                 })
                 embedMessage.setTimestamp(new Date().getTime());
                 embedMessage.setAuthor({
