@@ -771,7 +771,7 @@ client.on('messageCreate', async message => {
             kicked.kick(); 
         }
 
-    if (command === 'soundboard' || command === 'sb')
+    if (command === 'soundboard')
     {
         message.react('✅');
    
