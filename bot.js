@@ -206,7 +206,7 @@ client.on('ready', () => {
                 name: 'item-count',
                 description: 'item count you want to turn into shulker box count',
                 required: true,
-                type: ApplicationCommandOptionType.Number
+                type: Discord.Constants.ApplicationCommandOptionTypes.NUMBER
             }
         ]
     })
