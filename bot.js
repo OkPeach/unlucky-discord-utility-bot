@@ -594,15 +594,26 @@ client.on('messageCreate', async message => {
             embedMessage.setTimestamp(new Date().getTime());
 
             let itemCount = args.slice(0).join(' ');
-            var sbCount = itemCount / 1728;
-            var sbCountRounded = sbCount.toFixed(2);
+            let isnumber = !isNaN(itemCount);
+            if (!isnumber) {
+                embedMessage.setTitle(`Not a number >:(`);
 
-            embedMessage.setTitle(`You need ${sbCountRounded} shulker boxes to get ${itemCount} items`);
+                message.react('❌');
+                message.channel.send({
+                    embeds: [embedMessage]
+                });
+            }
+            else {
+                var sbCount = itemCount / 1728;
+                var sbCountRounded = sbCount.toFixed(2);
 
-            message.react('✅');
-            message.channel.send({
-                embeds: [embedMessage]
-            });
+                embedMessage.setTitle(`You need ${sbCountRounded} shulker boxes to get ${itemCount} items`);
+
+                message.react('✅');
+                message.channel.send({
+                    embeds: [embedMessage]
+                });
+            }
     }
 
     //get info about wallet from blockchain.info API and send it in embed message
