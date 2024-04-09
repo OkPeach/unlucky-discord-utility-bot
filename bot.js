@@ -591,7 +591,7 @@ client.on('messageCreate', async message => {
             embedMessage.setFooter({
                 text: `Unlucky bot | Made by unlucky.life`
             })
-            mbedMessage.setTimestamp(new Date().getTime());
+            embedMessage.setTimestamp(new Date().getTime());
 
             let itemCount = args.slice(0).join(' ');
             var sbCount = itemCount / 1728;
