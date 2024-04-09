@@ -22,7 +22,7 @@ conkeys = process.env.CONKEY;
 giphyKey = process.env.GKEY;
 
 //random stat
-const CommandsNumber = '33';
+const CommandsNumber = '34';
 
 //import discord
 const Discord = require('discord.js');
@@ -203,10 +203,10 @@ client.on('ready', () => {
         description: 'Turns item count into how many shulkers you need',
         options: [
             {
-                name: 'item count',
+                name: 'item-count',
                 description: 'item count you want to turn into shulker box count',
                 required: true,
-                type: ApplicationCommandOptionTypes.Number
+                type: ApplicationCommandOptionType.Number
             }
         ]
     })
@@ -246,7 +246,7 @@ client.on('interactionCreate', async (interaction) => {
     }
     //sb slash command
     if (commandName === 'sb') {
-            let itemCount = options.getNumber('item count')
+            let itemCount = options.get('item-count').value
             var sbCount = itemCount / 1728;
             var sbCountRounded = sbCount.toFixed(2);
             interaction.reply({
