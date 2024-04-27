@@ -262,10 +262,11 @@ client.on('interactionCreate', async (interaction) => {
     }
     //sb slash command
     if (commandName === 'stacks') {
-        let itemCount = options.get('item-count').value
-        let stackSize = options.get('stack-size').value
+        let stackSize = 64;
 
-        if (!stackSize) {
+        let itemCount = options.get('item-count').value
+
+        if (!options.get('stack-size').value) {
             const fullStacks = Math.floor(itemCount / 64);
             const remainingItems = itemCount % 64;
 
@@ -274,6 +275,8 @@ client.on('interactionCreate', async (interaction) => {
                 ephemeral: false
             })
         } else {
+            stackSize = options.get('stack-size').value
+
             const fullStacks = Math.floor(itemCount / stackSize);
             const remainingItems = itemCount % stackSize;
 
