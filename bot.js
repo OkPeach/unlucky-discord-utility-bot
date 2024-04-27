@@ -199,12 +199,12 @@ client.on('ready', () => {
         description: 'shows all / "slash" commands I can do'
     })
     commands?.create({
-        name: 'sb',
-        description: 'Turns item count into how many shulkers you need',
+        name: 'stacks',
+        description: 'Tell how many stacks you need',
         options: [
             {
                 name: 'item-count',
-                description: 'item count you want to turn into shulker box count',
+                description: 'item count you want stack count of',
                 required: true,
                 type: Discord.Constants.ApplicationCommandOptionTypes.NUMBER
             }
@@ -254,6 +254,16 @@ client.on('interactionCreate', async (interaction) => {
                 ephemeral: false
             })
     }
+    //sb slash command
+    if (commandName === 'stacks') {
+        let itemCount = options.get('item-count').value
+        const fullStacks = Math.floor(itemCount / 64);
+        const remainingItems = totalItems % stackSize;
+        interaction.reply({
+            content: `You need ${fullStacks} stacks and ${remainingItems} items (total ${itemCount})`,
+            ephemeral: false
+        })
+}
     //penis slash command
     else if (commandName === 'penis') {
         const user = options.getUser('user')
@@ -615,6 +625,40 @@ client.on('messageCreate', async message => {
                 });
             }
     }
+
+    if (command === 'sb') {
+        const embedMessage =  new Discord.MessageEmbed()
+        embedMessage.setColor(
+            emColor
+        )
+        embedMessage.setFooter({
+            text: `Unlucky bot | Made by unlucky.life`
+        })
+        embedMessage.setTimestamp(new Date().getTime());
+
+        let itemCount = args.slice(0).join(' ');
+        let isnumber = !isNaN(itemCount);
+        if (!isnumber) {
+            embedMessage.setTitle(`Not a number >:(`);
+
+            message.react('❌');
+            message.channel.send({
+                embeds: [embedMessage]
+            });
+        }
+        else {
+
+            const fullStacks = Math.floor(itemCount / 64);
+            const remainingItems = totalItems % stackSize;
+
+            embedMessage.setTitle(`You need ${fullStacks} stacks and ${remainingItems}  (total ${itemCount})`);
+
+            message.react('✅');
+            message.channel.send({
+                embeds: [embedMessage]
+            });
+        }
+}
 
     //get info about wallet from blockchain.info API and send it in embed message
     if (command === 'wallet') {
