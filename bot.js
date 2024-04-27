@@ -207,6 +207,12 @@ client.on('ready', () => {
                 description: 'item count you want stack count of',
                 required: true,
                 type: Discord.Constants.ApplicationCommandOptionTypes.NUMBER
+            },
+            {
+                name: 'stack-size',
+                description: 'stack size of the item you want, default is 64',
+                required: false,
+                type: Discord.Constants.ApplicationCommandOptionTypes.NUMBER
             }
         ]
     })
@@ -257,12 +263,25 @@ client.on('interactionCreate', async (interaction) => {
     //sb slash command
     if (commandName === 'stacks') {
         let itemCount = options.get('item-count').value
-        const fullStacks = Math.floor(itemCount / 64);
-        const remainingItems = itemCount % stackSize;
-        interaction.reply({
-            content: `You need ${fullStacks} stacks and ${remainingItems} items (total ${itemCount})`,
-            ephemeral: false
-        })
+        let stackSize = options.get('stack-size').value
+
+        if (!stackSize) {
+            const fullStacks = Math.floor(itemCount / 64);
+            const remainingItems = itemCount % 64;
+
+            interaction.reply({
+                content: `You need ${fullStacks} stacks and ${remainingItems} items (total ${itemCount})`,
+                ephemeral: false
+            })
+        } else {
+            const fullStacks = Math.floor(itemCount / stackSize);
+            const remainingItems = itemCount % stackSize;
+
+            interaction.reply({
+                content: `You need ${fullStacks} stacks and ${remainingItems} items (total ${itemCount})`,
+                ephemeral: false
+            })
+        }
 }
     //penis slash command
     else if (commandName === 'penis') {
@@ -649,7 +668,7 @@ client.on('messageCreate', async message => {
         else {
 
             const fullStacks = Math.floor(itemCount / 64);
-            const remainingItems = itemCount % stackSize;
+            const remainingItems = itemCount % 64;
 
             embedMessage.setTitle(`You need ${fullStacks} stacks and ${remainingItems}  (total ${itemCount})`);
 
