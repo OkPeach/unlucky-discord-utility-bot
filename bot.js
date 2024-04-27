@@ -266,7 +266,7 @@ client.on('interactionCreate', async (interaction) => {
 
         let itemCount = options.get('item-count').value
 
-        if (!interaction.options.get('stack-size').value) {
+        if (!interaction.options.get('stack-size')) {
             const fullStacks = Math.floor(itemCount / 64);
             const remainingItems = itemCount % 64;
 
