@@ -271,7 +271,7 @@ client.on('interactionCreate', async (interaction) => {
             const remainingItems = itemCount % 64;
 
             interaction.reply({
-                content: `You need ${fullStacks} stacks and ${remainingItems} items (total ${itemCount})`,
+                content: `You need ${fullStacks} x${stackSize} and ${remainingItems} items (total ${itemCount})`,
                 ephemeral: false
             })
         } else {
@@ -281,7 +281,7 @@ client.on('interactionCreate', async (interaction) => {
             const remainingItems = itemCount % stackSize;
 
             interaction.reply({
-                content: `You need ${fullStacks} stacks and ${remainingItems} items (total ${itemCount})`,
+                content: `You need ${fullStacks} x${stackSize} and ${remainingItems} items (total ${itemCount})`,
                 ephemeral: false
             })
         }
