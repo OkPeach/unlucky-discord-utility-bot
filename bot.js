@@ -266,7 +266,7 @@ client.on('interactionCreate', async (interaction) => {
 
         let itemCount = options.get('item-count').value
 
-        if (!options.get('stack-size').value) {
+        if (!interaction.options.get('stack-size').value) {
             const fullStacks = Math.floor(itemCount / 64);
             const remainingItems = itemCount % 64;
 
@@ -275,7 +275,7 @@ client.on('interactionCreate', async (interaction) => {
                 ephemeral: false
             })
         } else {
-            stackSize = options.get('stack-size').value
+            stackSize = interaction.options.get('stack-size').value
 
             const fullStacks = Math.floor(itemCount / stackSize);
             const remainingItems = itemCount % stackSize;
