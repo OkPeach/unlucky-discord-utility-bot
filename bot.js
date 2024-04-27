@@ -258,7 +258,7 @@ client.on('interactionCreate', async (interaction) => {
     if (commandName === 'stacks') {
         let itemCount = options.get('item-count').value
         const fullStacks = Math.floor(itemCount / 64);
-        const remainingItems = totalItems % stackSize;
+        const remainingItems = itemCount % stackSize;
         interaction.reply({
             content: `You need ${fullStacks} stacks and ${remainingItems} items (total ${itemCount})`,
             ephemeral: false
@@ -626,7 +626,7 @@ client.on('messageCreate', async message => {
             }
     }
 
-    if (command === 'sb') {
+    if (command === 'stacks') {
         const embedMessage =  new Discord.MessageEmbed()
         embedMessage.setColor(
             emColor
@@ -649,7 +649,7 @@ client.on('messageCreate', async message => {
         else {
 
             const fullStacks = Math.floor(itemCount / 64);
-            const remainingItems = totalItems % stackSize;
+            const remainingItems = itemCount % stackSize;
 
             embedMessage.setTitle(`You need ${fullStacks} stacks and ${remainingItems}  (total ${itemCount})`);
 
