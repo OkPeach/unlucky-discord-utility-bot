@@ -680,6 +680,7 @@ client.on('messageCreate', async message => {
                 embeds: [embedMessage]
             });
         }
+}
 
     //get info about wallet from blockchain.info API and send it in embed message
     if (command === 'wallet') {
@@ -1841,9 +1842,4 @@ client.on('messageCreate', async message => {
         //call function
         BTC();
     }
-
-    if (messageContent.includes('faggot')) {
-        await timeoutUser(message, 100); // times them out for 10 minutes
-    }
-}
 })
