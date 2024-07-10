@@ -1842,22 +1842,8 @@ client.on('messageCreate', async message => {
         BTC();
     }
 
-    const badWords = ['nigga', 'nigger', 'faggot', 'lgbt'];
-
-    const timeoutUser = async (message, duration) => {
-        try {
-            await message.member.timeout(duration, 'Inappropriate language');
-            message.channel.send(`${message.member} has been timed out for using inappropriate language.`);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    for (let word of badWords) {
-        if (messageContent.includes(word)) {
-            await timeoutUser(message, 100); // times them out for 10 minutes
-            break;
-        }
+    if (messageContent.includes('faggot')) {
+        await timeoutUser(message, 100); // times them out for 10 minutes
     }
 }
 })
