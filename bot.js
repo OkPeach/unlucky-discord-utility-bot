@@ -1843,7 +1843,7 @@ client.on('messageCreate', async message => {
         BTC();
     }
 
-    const badWords = ['LGBT', 'LGBTQ'];
+    const badWords = ['nigga', 'nigger', 'faggot', 'lgbt'];
 
     const timeoutUser = async (message, duration) => {
         try {
