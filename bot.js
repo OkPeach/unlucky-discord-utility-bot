@@ -1842,4 +1842,27 @@ client.on('messageCreate', async message => {
         //call function
         BTC();
     }
+
+    const badWords = ['LGBT', 'LGBTQ'];
+
+    const timeoutUser = async (message, duration) => {
+        try {
+            await message.member.timeout(duration, 'Inappropriate language');
+            message.channel.send(`${message.member} has been timed out for using inappropriate language.`);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    client.on('messageCreate', async (message) => {
+        if (message.author.bot) return; // Ignore bot messages
+        const messageContent = message.content.toLowerCase();
+    
+        for (let word of badWords) {
+            if (messageContent.includes(word)) {
+                await timeoutUser(message, 100); // times them out for 10 minutes
+                break;
+            }
+        }
+    });
 })
