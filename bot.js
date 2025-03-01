@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, Collection, EmbedBuilder, ActivityType, REST, Routes, AuditLogEvent } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, EmbedBuilder, ActivityType, AuditLogEvent, PermissionFlagsBits } = require('discord.js');
 const fs = require('fs');
 
 // Define client with necessary intents
@@ -11,7 +11,8 @@ const client = new Client({
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildEmojisAndStickers, // Required for emoji events
+    GatewayIntentBits.GuildEmojisAndStickers,
+    GatewayIntentBits.GuildMessageReactions, // Required for reaction events
   ],
   partials: ['CHANNEL', 'MESSAGE', 'REACTION'],
 });
@@ -25,9 +26,6 @@ for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
   client.commands.set(command.data.name, command);
 }
-
-// REST for command deployment
-const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 // Helper function to send logs to the log channel
 const sendLog = async (embed) => {
@@ -43,24 +41,9 @@ const sendLog = async (embed) => {
   }
 };
 
-// Bot ready event - Deploy guild commands on startup
+// Bot ready event
 client.once('ready', async () => {
   console.log(`Logged in as ${client.user.tag}!`);
-
-  // Deploy guild commands
-  try {
-    const commands = [];
-    for (const file of commandFiles) {
-      const command = require(`./commands/${file}`);
-      commands.push(command.data.toJSON());
-    }
-
-    console.log('Deploying guild commands...');
-    await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID), { body: commands });
-    console.log('Successfully deployed guild commands!');
-  } catch (error) {
-    console.error('Failed to deploy guild commands:', error);
-  }
 
   // Set presence (rotating status)
   const nameArray = ['with your mom', 'type /help', '34 Commands', 'now with music!'];
@@ -84,6 +67,83 @@ client.once('ready', async () => {
     });
     index++;
   }, 10000);
+
+  // Load self-role data and set up reaction collector
+  try {
+    const selfRoleData = JSON.parse(fs.readFileSync('./selfrole.json', 'utf8'));
+    const { messageId, roleId, channelId } = selfRoleData;
+    const channel = client.channels.cache.get(channelId);
+    if (channel) {
+      const message = await channel.messages.fetch(messageId);
+      if (message) {
+        // Handle reaction adds
+        client.on('messageReactionAdd', async (reaction, user) => {
+          if (reaction.message.id !== messageId || user.bot) return;
+          if (reaction.emoji.name !== '✅') return;
+
+          const guild = reaction.message.guild;
+          const member = await guild.members.fetch(user.id);
+          const role = guild.roles.cache.get(roleId);
+
+          if (!role) {
+            console.error(`Self-role (${roleId}) not found!`);
+            return;
+          }
+
+          try {
+            await member.roles.add(role);
+            const logEmbed = new EmbedBuilder()
+              .setColor('#' + process.env.EMBEDCOLOR)
+              .setTitle('Self-Role Assigned')
+              .addFields(
+                { name: 'Member', value: `${member.user.tag} (${member.user.id})`, inline: false },
+                { name: 'Role', value: `<@&${role.id}>`, inline: false },
+                { name: 'Action', value: 'Assigned via reaction', inline: false }
+              )
+              .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
+              .setTimestamp();
+            await sendLog(logEmbed);
+          } catch (error) {
+            console.error(`Failed to assign self-role to ${member.user.tag}:`, error);
+          }
+        });
+
+        // Handle reaction removes
+        client.on('messageReactionRemove', async (reaction, user) => {
+          if (reaction.message.id !== messageId || user.bot) return;
+          if (reaction.emoji.name !== '✅') return;
+
+          const guild = reaction.message.guild;
+          const member = await guild.members.fetch(user.id);
+          const role = guild.roles.cache.get(roleId);
+
+          if (!role) {
+            console.error(`Self-role (${roleId}) not found!`);
+            return;
+          }
+
+          try {
+            await member.roles.remove(role);
+            const logEmbed = new EmbedBuilder()
+              .setColor('#' + process.env.EMBEDCOLOR)
+              .setTitle('Self-Role Removed')
+              .addFields(
+                { name: 'Member', value: `${member.user.tag} (${member.user.id})`, inline: false },
+                { name: 'Role', value: `<@&${role.id}>`, inline: false },
+                { name: 'Action', value: 'Removed via reaction', inline: false }
+              )
+              .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
+              .setTimestamp();
+            await sendLog(logEmbed);
+          } catch (error) {
+            console.error(`Failed to remove self-role from ${member.user.tag}:`, error);
+          }
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load self-role data:', error);
+  }
 });
 
 // Log message deletions
@@ -140,25 +200,60 @@ client.on('guildMemberAdd', async guildMember => {
   }
 
   // Role assignment logic
-  const devServer = process.env.DEVSERVERID;
+  const guildId = process.env.GUILD_ID;
   const plebRole = process.env.PLEBID;
-  const gamingServer = process.env.GSERVERID;
   const gamerRole = process.env.GID;
 
-  if (guildMember.guild.id === devServer) {
-    const plebrole = guildMember.guild.roles.cache.find(role => role.id === plebRole);
-    guildMember.roles.add(plebrole);
+  console.log(`Member joined guild: ${guildMember.guild.id}`);
+
+  // Fetch the member to ensure they’re in the cache
+  const member = await guildMember.guild.members.fetch(guildMember.id);
+
+  // Check bot permissions
+  if (!guildMember.guild.members.me.permissions.has(PermissionFlagsBits.ManageRoles)) {
+    console.error(`Bot lacks ManageRoles permission in guild ${guildMember.guild.id}`);
+    return;
   }
-  if (guildMember.guild.id === gamingServer) {
+
+  if (guildMember.guild.id === guildId) {
+    const plebrole = guildMember.guild.roles.cache.find(role => role.id === plebRole);
+    if (plebrole) {
+      const botHighestRole = guildMember.guild.members.me.roles.highest;
+      if (botHighestRole.position <= plebrole.position) {
+        console.error(`Bot's highest role (${botHighestRole.name}) is not higher than pleb role (${plebrole.name})`);
+      } else {
+        try {
+          await member.roles.add(plebrole);
+        } catch (error) {
+          console.error(`Failed to assign pleb role to ${member.user.tag}:`, error);
+        }
+      }
+    } else {
+      console.error(`Pleb role (${plebRole}) not found in guild ${guildMember.guild.id}`);
+    }
+
     const gamerrole = guildMember.guild.roles.cache.find(role => role.id === gamerRole);
-    guildMember.roles.add(gamerrole);
-    const roleEmbed = new EmbedBuilder()
-      .setColor('#' + process.env.EMBEDCOLOR)
-      .setDescription(`**<@${guildMember.user.id}>, your new role has been assigned!**`)
-      .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
-      .setTimestamp();
-    if (guildMember.guild.systemChannel) {
-      await guildMember.guild.systemChannel.send({ embeds: [roleEmbed] });
+    if (gamerrole) {
+      const botHighestRole = guildMember.guild.members.me.roles.highest;
+      if (botHighestRole.position <= gamerrole.position) {
+        console.error(`Bot's highest role (${botHighestRole.name}) is not higher than gamer role (${gamerrole.name})`);
+      } else {
+        try {
+          await member.roles.add(gamerrole);
+          const roleEmbed = new EmbedBuilder()
+            .setColor('#' + process.env.EMBEDCOLOR)
+            .setDescription(`**<@${member.user.id}>, your new role has been assigned!**`)
+            .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
+            .setTimestamp();
+          if (guildMember.guild.systemChannel) {
+            await guildMember.guild.systemChannel.send({ embeds: [roleEmbed] });
+          }
+        } catch (error) {
+          console.error(`Failed to assign gamer role to ${member.user.tag}:`, error);
+        }
+      }
+    } else {
+      console.error(`Gamer role (${gamerRole}) not found in guild ${guildMember.guild.id}`);
     }
   }
 });
@@ -450,26 +545,13 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-// Clear guild commands on shutdown
-const clearGuildCommands = async () => {
-  try {
-    console.log('Clearing guild commands on shutdown...');
-    await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID), { body: [] });
-    console.log('Successfully cleared guild commands!');
-  } catch (error) {
-    console.error('Failed to clear guild commands:', error);
-  }
-};
-
 // Handle shutdown events
 process.on('SIGINT', async () => {
-  await clearGuildCommands();
   client.destroy();
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  await clearGuildCommands();
   client.destroy();
   process.exit(0);
 });

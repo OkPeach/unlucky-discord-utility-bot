@@ -16,15 +16,15 @@ module.exports = {
         },
         { 
           name: 'Moderation', 
-          value: '`/kick` - Kick a user\n`/purge` - Delete messages\n`/rules` - Post the server rules\n`/embed` - Create a custom embed message' 
+          value: '`/kick` - Kick a user\n`/purge` - Delete messages\n`/rules` - Post the server rules\n`/embed` - Create a custom embed message\n`/selfrole` - Set up a self-role message' 
         },
         { 
           name: 'Fun', 
-          value: '`/8ball` - Ask the Magic 8 Ball a question\n`/chucknorris` - Get a Chuck Norris joke\n`/quote` - Get an inspirational quote\n`/coinflip` - Flip a coin\n`/roll` - Roll dice (e.g., 1d6, 2d20)\n`/meme` - Get a random meme\n`/penis` - Totally not rigged penis size' 
+          value: '`/8ball` - Ask the Magic 8 Ball a question\n`/chucknorris` - Get a Chuck Norris joke\n`/quote` - Get an inspirational quote\n`/coinflip` - Flip a coin\n`/roll` - Roll dice (e.g., 1d6, 2d20)\n`/meme` - Get a random meme\n`/penis` - Penis size' 
         },
         {
           name: 'Images',
-          value: '`/cat` - Get a random cat image\n`/dog` - Get a random dog image\n`/catgirl` - Get a random anime-style catgirl (neko) image'
+          value: '`/cat` - Get a random cat image\n`/dog` - Get a random dog image\n`/catgirl` - Get a random anime-style catgirl'
         }
       )
       .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
