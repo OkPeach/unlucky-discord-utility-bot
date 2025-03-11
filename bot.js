@@ -1,4 +1,5 @@
 require('dotenv').config();
+console.log('.env loaded')
 const { Client, GatewayIntentBits, Collection, EmbedBuilder, ActivityType, AuditLogEvent, PermissionFlagsBits } = require('discord.js');
 const fs = require('fs');
 
@@ -72,6 +73,7 @@ client.once('ready', async () => {
   try {
     const selfRoleData = JSON.parse(fs.readFileSync('./selfrole.json', 'utf8'));
     const { messageId, roleId, channelId } = selfRoleData;
+    console.log('selfrole.json loaded')
     const channel = client.channels.cache.get(channelId);
     if (channel) {
       const message = await channel.messages.fetch(messageId);
