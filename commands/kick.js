@@ -21,6 +21,7 @@ module.exports = {
     if (!member) {
       const errorEmbed = new EmbedBuilder()
         .setColor('#' + process.env.EMBEDCOLOR)
+        .setTitle(`<:moderation:1349057042467520554> Error`)
         .setDescription('User not found!')
         .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
         .setTimestamp();
@@ -30,7 +31,7 @@ module.exports = {
     await member.kick(reason);
     const embed = new EmbedBuilder()
       .setColor('#' + process.env.EMBEDCOLOR)
-      .setTitle('User Kicked')
+      .setTitle(`<:BYE:1349064928169824386> User kicked`)
       .setDescription(`Kicked ${user.tag}\n**Reason:** ${reason}`)
       .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
       .setTimestamp();

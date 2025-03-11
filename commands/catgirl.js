@@ -13,7 +13,7 @@ module.exports = {
 
       const embed = new EmbedBuilder()
         .setColor('#' + process.env.EMBEDCOLOR)
-        .setTitle('😺 Random Catgirl')
+        .setTitle('<a:ChocolaBlushing:1349064184817778859> Random Catgirl')
         .setImage(catgirlImage)
         .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
         .setTimestamp();

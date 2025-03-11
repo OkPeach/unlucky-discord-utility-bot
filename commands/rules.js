@@ -31,7 +31,7 @@ module.exports = {
     // Create the rules embed
     const embed = new EmbedBuilder()
       .setColor('#' + process.env.EMBEDCOLOR)
-      .setTitle('📜 Server Rules')
+      .setTitle('<:Rules:1349073961689813112> Server Rules <:readrules_IDS:1349073968857878611>')
       .setDescription('Here are the rules for our chill server! Follow them to keep things fun for everyone.')
       .addFields(
         { name: '1. Be Respectful', value: 'No toxicity, harassment, or drama. We’re here to have fun!', inline: false },

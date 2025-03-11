@@ -29,6 +29,7 @@ module.exports = {
       const errorEmbed = new EmbedBuilder()
         .setColor('#' + process.env.EMBEDCOLOR)
         .setDescription('You don’t have permission to use this command!')
+        .setTitle(`<:moderation:1349057042467520554> Purge`)
         .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
         .setTimestamp();
       return interaction.reply({ embeds: [errorEmbed], ephemeral: true });
@@ -40,6 +41,7 @@ module.exports = {
     const { size } = await channel.bulkDelete(amount, true);
     const embed = new EmbedBuilder()
       .setColor('#' + process.env.EMBEDCOLOR)
+      .setTitle(`<:moderation:1349057042467520554> Purge`)
       .setDescription(`Purged ${size} messages!`)
       .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
       .setTimestamp();

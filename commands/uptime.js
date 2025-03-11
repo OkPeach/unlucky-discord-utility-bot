@@ -13,7 +13,7 @@ module.exports = {
     const uptime = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
     const embed = new EmbedBuilder()
       .setColor('#' + process.env.EMBEDCOLOR)
-      .setTitle('Uptime')
+      .setTitle('<:Stopwatch:1349065275257131068> Uptime')
       .setDescription(`My uptime is ${uptime}`)
       .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
       .setTimestamp();

@@ -22,7 +22,7 @@ module.exports = {
     } else if (user.id === kevinId) {
       penisSize = 0;
     } else if (user.id === elopiId) {
-      penisSize = 10;
+      penisSize = 5;
     } else {
       penisSize = Math.floor(Math.random() * 20); // Random size between 0-19
     }
@@ -32,7 +32,7 @@ module.exports = {
 
     const embed = new EmbedBuilder()
       .setColor('#' + process.env.EMBEDCOLOR)
-      .setTitle('🍆 Penis Size')
+      .setTitle('🍆 <a:pe:1349063478081617990><a:nis:1349063495471202314> Size')
       .setDescription(`${user.username}'s penis size is ${penisSize}cm\n8${penis}D💦`)
       .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
       .setTimestamp();

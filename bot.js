@@ -46,12 +46,12 @@ client.once('ready', async () => {
   console.log(`Logged in as ${client.user.tag}!`);
 
   // Set presence (rotating status)
-  const nameArray = ['with your mom', 'type /help', '34 Commands', 'now with music!'];
+  const nameArray = ['with your mom', '/help', 'new slash cmds', 'catgirls'];
   const typeArray = [
     ActivityType.Playing,
-    ActivityType.Playing,
     ActivityType.Listening,
-    ActivityType.Playing,
+    ActivityType.Listening,
+    ActivityType.Watching,
   ];
   const statusArray = ['dnd', 'online', 'online', 'online'];
   let index = 0;
@@ -146,6 +146,22 @@ client.once('ready', async () => {
   }
 });
 
+// Message reaction logic
+client.on('messageCreate', async message => {
+  if (message.author.bot) return;
+
+  const triggerWords = ['rat', 'mouse', 'myš', 'myšák', 'krysa', 'krysák'];
+  const messageContent = message.content.toLowerCase();
+
+  if (triggerWords.some(word => messageContent.includes(word))) {
+    try {
+      await message.react('<:Rat:1349066449834217542>');
+    } catch (error) {
+      console.error('Failed to react to message:', error);
+    }
+  }
+});
+
 // Log message deletions
 client.on('messageDelete', async (message) => {
   if (message.author.bot) return; // Ignore bot messages
@@ -189,7 +205,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
 client.on('guildMemberAdd', async guildMember => {
   const embed = new EmbedBuilder()
     .setColor('#' + process.env.EMBEDCOLOR)
-    .setTitle(`Welcome to ${guildMember.guild.name}!`)
+    .setTitle(`<a:welcome1:1349072814820556800><a:welcome2:1349072792951328888> Welcome to ${guildMember.guild.name}!`)
     .setDescription(`**Hello <@${guildMember.user.id}>!** We're glad you're here.`)
     .setThumbnail(guildMember.user.displayAvatarURL({ dynamic: true }))
     .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
