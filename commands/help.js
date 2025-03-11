@@ -29,6 +29,10 @@ module.exports = {
         {
           name: '<a:PenguBitcoin:1349061239845818489> Crypto',
           value: '`/crypto` - View prices for Bitcoin, Ethereum, Litecoin, Solana, Dogecoin, and Pepe'
+        },
+        {
+          name: '<a:minecraftcube:1349082923453649018> Minecraft',
+          value: '`/stacks` - Calculate item stacks\n`/shulker` - Calculate shulker boxes\n`/mcserverinfo` - Detailed server info\n`/mcplayerinfo` - Player info (UUID, skin)'
         }
       )
       .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
