@@ -146,18 +146,43 @@ client.once('ready', async () => {
   }
 });
 
-// Message reaction logic
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
 
-  const triggerWords = ['rat', 'mouse', 'myš', 'myšák', 'krysa', 'krysák'];
   const messageContent = message.content.toLowerCase();
 
-  if (triggerWords.some(word => messageContent.includes(word))) {
-    try {
-      await message.react('<:Rat:1349066449834217542>');
-    } catch (error) {
-      console.error('Failed to react to message:', error);
+  // Name-to-emoji mapping
+  const nameToEmojiMap = {
+    'rat': '<:Rat:1349066449834217542>',
+    'myš': '<:Rat:1349066449834217542>',
+    'mouse': '<:Rat:1349066449834217542>',
+    'krys': '<:Rat:1349066449834217542>',
+    'smols': '<:Smols:1349100605033025687>',
+    'žmols': '<:Smols:1349100605033025687>',
+    'stanley': '<:Stanley:1349103941878681620>',
+    'stanlík': '<:Stanley:1349103941878681620>',
+    'smoldix': '<:Smoldixa:1349103905040236706>',
+    'umbra': '<:Umbra:1349103877739385003>',
+    'umbřík': '<:Umbra:1349103877739385003>',
+    'kofi': '<:Kofik:1349103850878931005>',
+    'kofík': '<:Kofik:1349103850878931005>',
+    'verk': '<:Verk:1349103798190346271>',
+    'lahvi': '<:Lahvik:1349103785880060057>',
+    'lahvík': '<:Lahvik:1349103785880060057>',
+    'eda': '<:Eda:1349103425312522321>',
+    'edík': '<:Eda:1349103425312522321>',
+    'bobinka': '<:Bobinka:1349103208751956029>',
+    'dix': '<:Dixa:1349103200275533898>',
+  };
+
+  // Check for names in the message content and react with corresponding emoji
+  for (const [name, emoji] of Object.entries(nameToEmojiMap)) {
+    if (messageContent.includes(name)) {
+      try {
+        await message.react(emoji);
+      } catch (error) {
+        console.error(`Failed to react with ${name} emoji:`, error);
+      }
     }
   }
 });
@@ -205,7 +230,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
 client.on('guildMemberAdd', async guildMember => {
   const embed = new EmbedBuilder()
     .setColor('#' + process.env.EMBEDCOLOR)
-    .setTitle(`<a:welcome1:1349072814820556800><a:welcome2:1349072792951328888> Welcome to ${guildMember.guild.name}!`)
+    .setTitle(`<a:welcome1:1349072814820556800><a:welcome2:1349072792951328888> to ${guildMember.guild.name}!`)
     .setDescription(`**Hello <@${guildMember.user.id}>!** We're glad you're here.`)
     .setThumbnail(guildMember.user.displayAvatarURL({ dynamic: true }))
     .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
@@ -218,7 +243,7 @@ client.on('guildMemberAdd', async guildMember => {
   // Role assignment logic
   const guildId = process.env.GUILD_ID;
   const plebRole = process.env.PLEBID;
-  const gamerRole = process.env.GID;
+  const gamerRole = process.env.AUTOROLE;
 
   console.log(`Member joined guild: ${guildMember.guild.id}`);
 
@@ -510,7 +535,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 
     // Exclude auto-assigned roles (plebRole and gamerRole) from logging
     const plebRole = process.env.PLEBID;
-    const gamerRole = process.env.GID;
+    const gamerRole = process.env.AUTOROLE;
     const isAutoAssignedRole = addedRoles.size === 1 && (addedRoles.has(plebRole) || addedRoles.has(gamerRole));
 
     if (isAutoAssignedRole) return; // Skip logging for auto-assigned roles

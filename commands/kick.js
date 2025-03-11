@@ -18,6 +18,15 @@ module.exports = {
     const reason = interaction.options.getString('reason') || 'No reason provided';
     const member = interaction.guild.members.cache.get(user.id);
 
+    if (!interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+      const errorEmbed = new EmbedBuilder()
+        .setColor('#' + process.env.EMBEDCOLOR)
+        .setDescription('You don’t have permission to use this command!')
+        .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
+        .setTimestamp();
+      return interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+    }
+
     if (!member) {
       const errorEmbed = new EmbedBuilder()
         .setColor('#' + process.env.EMBEDCOLOR)
