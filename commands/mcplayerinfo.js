@@ -4,60 +4,79 @@ const axios = require('axios');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('mcplayerinfo')
-    .setDescription('Get information about a Minecraft player, including cape status')
+    .setDescription('Get detailed information about a Minecraft player')
     .addStringOption(option => 
-      option.setName('player')
-        .setDescription('Minecraft username')
+      option.setName('username')
+        .setDescription('Minecraft username (e.g., LucienETH)')
         .setRequired(true)
     ),
+
   async execute(interaction) {
-    await interaction.deferReply(); // Defer for API calls
+    await interaction.deferReply(); // Defer reply for processing
 
-    const playerName = interaction.options.getString('player');
-    try {
-      // Get UUID from Mojang API
-      const uuidResponse = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${playerName}`);
-      const { id: uuid, name } = uuidResponse.data;
-      if (!uuid) throw new Error('Player not found');
+    const username = interaction.options.getString('username');
+    console.log('Username provided:', username); // Debug log
 
-      // Get name history from Mojang API
-      const nameHistoryResponse = await axios.get(`https://api.mojang.com/user/profiles/${uuid}/names`);
-      const nameHistory = nameHistoryResponse.data.map(entry => entry.name).join(', ') || 'N/A';
-
-      // Check for cape using NameMC API (unofficial but widely used)
-      let capeInfo = 'N/A';
-      try {
-        const nameMCResponse = await axios.get(`https://api.namemc.com/profile/${uuid}`);
-        const profile = nameMCResponse.data;
-        capeInfo = profile.cape ? `Yes (${profile.cape.type || 'Unknown Type'})` : 'No';
-      } catch (capeError) {
-        console.warn('Cape check failed, defaulting to N/A:', capeError.message);
-        capeInfo = 'N/A (Check failed, may require manual verification)';
-      }
-
-      const embed = new EmbedBuilder()
+    if (!username) {
+      console.error('Username is null or undefined');
+      const embedMessage = new EmbedBuilder()
         .setColor('#' + process.env.EMBEDCOLOR)
-        .setTitle(`<:hardcore:1349082951056359504> Player Info: ${name}`)
-        .addFields(
-          { name: 'UUID', value: uuid, inline: false },
-          { name: 'Name History', value: nameHistory, inline: false },
-          { name: 'Cape', value: capeInfo, inline: true },
-          { name: 'Skin', value: `[Download Skin](https://crafatar.com/skins/${uuid})`, inline: true }
-        )
-        .setThumbnail(`https://crafatar.com/avatars/${uuid}?size=100&overlay`)
-        .setFooter({ text: 'Unlucky bot | Made by unlucky.life | Note: Cape info may not reflect modded or private capes' })
-        .setTimestamp();
-
-      await interaction.editReply({ embeds: [embed] });
-    } catch (error) {
-      console.error('MC Player Info error:', error);
-      const embed = new EmbedBuilder()
-        .setColor('#' + process.env.EMBEDCOLOR)
-        .setTitle(`<:hardcore:1349082951056359504> Player Info: ${playerName}`)
-        .setDescription('Failed to fetch player info. Check the username or try again later.')
+        .setTitle(`<:pepemom:1349062021697634344> Error`)
+        .setDescription('No username provided! Please specify a Minecraft username.')
         .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
         .setTimestamp();
-      await interaction.editReply({ embeds: [embed] });
+      return await interaction.editReply({ embeds: [embedMessage] });
+    }
+
+    const embedMessage = new EmbedBuilder()
+      .setColor('#' + process.env.EMBEDCOLOR)
+      .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
+      .setTimestamp();
+
+    try {
+      // Fetch player info from Ashcon API using axios
+      const apiUrl = `https://api.ashcon.app/mojang/v2/user/${encodeURIComponent(username)}`;
+      const response = await axios.get(apiUrl);
+      const result = response.data;
+
+      console.log(result)
+
+      // Set embed author with username, head image, and NameMC link
+      embedMessage.setAuthor({
+        name: result.username,
+        iconURL: `https://mc-heads.net/head/${result.username}`,
+        url: `https://namemc.com/profile/${result.username}`
+      });
+
+      // Set thumbnail with body image
+      embedMessage.setThumbnail(`https://mc-heads.net/body/${result.username}/right`);
+
+      // Handle created_at
+      const created = result.created_at === null || result.created_at === 'null' 
+        ? 'Unknown' 
+        : new Date(result.created_at).toLocaleDateString();
+
+      // Check for cape
+      const capeStatus = result.cape && result.cape.url
+        ? `✅ Yes ([view](${result.cape.url}))`
+        : '❌ No';
+
+      // Add description with player info, including cape
+      embedMessage.setDescription(
+        `**UUID:** ${result.uuid}\n` +
+        `**Renamed:** ${result.username_history.length} times\n` +
+        `**Created at:** ${created}\n` +
+        `**Cape:** ${capeStatus}`
+      );
+
+      // Send the embed
+      await interaction.editReply({ embeds: [embedMessage] });
+
+    } catch (error) {
+      console.error('MC Player Info error:', error.response ? error.response.data : error.message);
+      embedMessage.setTitle(`<:pepemom:1349062021697634344> Error`)
+        .setDescription(`Failed to fetch player info for ${username || 'unknown user'}! Check the username or try again later.`);
+      await interaction.editReply({ embeds: [embedMessage] });
     }
   },
 };
