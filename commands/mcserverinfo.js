@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { status } = require('minecraft-server-util'); // Using minecraft-server-util as a fallback
 
 module.exports = {
   data: new SlashCommandBuilder()
