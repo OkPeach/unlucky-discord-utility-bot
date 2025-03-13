@@ -620,9 +620,13 @@ client.on('messageReactionAdd', async (reaction, user) => {
   if (reaction.partial) await reaction.fetch();
   if (reaction.message.partial) await reaction.message.fetch();
 
-  // Check if the reaction is on a message sent by the bot with the color role embed
-  const embed = reaction.message.embeds[0];
-  if (!embed || embed.title !== '🎨 Choose Your Color Role!') return;
+  // Check if the reaction is on the stored color role message
+  if (
+    !colorRoleMessage ||
+    reaction.message.id !== colorRoleMessage.messageId ||
+    reaction.message.channelId !== colorRoleMessage.channelId ||
+    reaction.message.guildId !== colorRoleMessage.guildId
+  ) return;
 
   const member = await reaction.message.guild.members.fetch(user.id).catch(console.error);
   if (!member) return;
@@ -653,9 +657,13 @@ client.on('messageReactionRemove', async (reaction, user) => {
   if (reaction.partial) await reaction.fetch();
   if (reaction.message.partial) await reaction.message.fetch();
 
-  // Check if the reaction is on a message sent by the bot with the color role embed
-  const embed = reaction.message.embeds[0];
-  if (!embed || embed.title !== '🎨 Choose Your Color Role!') return;
+  // Check if the reaction is on the stored color role message
+  if (
+    !colorRoleMessage ||
+    reaction.message.id !== colorRoleMessage.messageId ||
+    reaction.message.channelId !== colorRoleMessage.channelId ||
+    reaction.message.guildId !== colorRoleMessage.guildId
+  ) return;
 
   const member = await reaction.message.guild.members.fetch(user.id).catch(console.error);
   if (!member) return;

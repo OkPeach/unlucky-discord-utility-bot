@@ -1,8 +1,10 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('rolecolor')
+    .setName('colorrole')
     .setDescription('Choose a color role by reacting to the message!'),
 
   async execute(interaction) {
@@ -35,5 +37,16 @@ module.exports = {
     for (const color of colorRoles) {
       await message.react(color.emoji).catch(console.error);
     }
+
+    // Store the message ID in a JSON file
+    const colorRoleData = {
+      guildId: interaction.guild.id,
+      channelId: interaction.channel.id,
+      messageId: message.id,
+    };
+
+    const filePath = path.join(__dirname, '..', 'colorrole.json');
+    fs.writeFileSync(filePath, JSON.stringify(colorRoleData, null, 2), 'utf8');
+    console.log(`Stored color role message ID: ${message.id}`);
   },
 };
