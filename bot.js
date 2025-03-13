@@ -2,6 +2,7 @@ require('dotenv').config();
 console.log('.env loaded')
 const { Client, GatewayIntentBits, Collection, EmbedBuilder, ActivityType, AuditLogEvent, PermissionFlagsBits } = require('discord.js');
 const fs = require('fs');
+const path = require('path');
 
 // Define client with necessary intents
 const client = new Client({
