@@ -43,18 +43,6 @@ const sendLog = async (embed) => {
   }
 };
 
-// Define color roles for reaction role handling
-const colorRoles = [
-  { name: 'Black', emoji: '⚫', roleId: '1349785923067576442' },
-  { name: 'Red', emoji: '🔴', roleId: '1349786107847639132' },
-  { name: 'Purple', emoji: '🟣', roleId: '1349786421807943742' },
-  { name: 'Orange', emoji: '🟠', roleId: '1349786354682302596' },
-  { name: 'Green', emoji: '🟢', roleId: '1349786258989383782' },
-  { name: 'Yellow', emoji: '🟡', roleId: '1349786623394578472' },
-  { name: 'White', emoji: '⚪', roleId: '1349786791829569556' },
-];
-
-
 // Bot ready event
 client.once('ready', async () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -159,6 +147,118 @@ client.once('ready', async () => {
   } catch (error) {
     console.error('Failed to load self-role data:', error);
   }
+
+  // Define color roles for reaction role handling
+const colorRoles = [
+  { name: 'Black', emoji: '⚫', roleId: '1349785923067576442' },
+  { name: 'Red', emoji: '🔴', roleId: '1349786107847639132' },
+  { name: 'Purple', emoji: '🟣', roleId: '1349786421807943742' },
+  { name: 'Orange', emoji: '🟠', roleId: '1349786354682302596' },
+  { name: 'Green', emoji: '🟢', roleId: '1349786258989383782' },
+  { name: 'Yellow', emoji: '🟡', roleId: '1349786623394578472' },
+  { name: 'White', emoji: '⚪', roleId: '1349786791829569556' },
+];
+
+
+  // Load color role data and set up reaction listeners
+  try {
+    const colorRoleData = JSON.parse(fs.readFileSync('./colorrole.json', 'utf8'));
+    console.log('colorrole.json loaded:', colorRoleData); // Log the raw data to debug
+    const { messageId: colorRoleMessageId, channelId: colorRoleChannelId, guildId: colorRoleGuildId, colorRoles } = colorRoleData;
+
+    if (!colorRoles || !Array.isArray(colorRoles)) {
+      console.error('colorRoles is undefined or not an array in colorrole.json:', colorRoleData);
+      return; // Exit if colorRoles is invalid
+    }
+
+    const colorRoleGuild = client.guilds.cache.get(colorRoleGuildId);
+    if (colorRoleGuild) {
+      const colorRoleChannel = colorRoleGuild.channels.cache.get(colorRoleChannelId);
+      if (colorRoleChannel) {
+        const colorRoleMessage = await colorRoleChannel.messages.fetch(colorRoleMessageId);
+        if (colorRoleMessage) {
+          // Handle reaction adds for color roles
+          client.on('messageReactionAdd', async (reaction, user) => {
+            if (reaction.message.id !== colorRoleMessageId || user.bot) return;
+
+            const guild = reaction.message.guild;
+            const member = await guild.members.fetch(user.id).catch(console.error);
+            if (!member) return;
+
+            const color = colorRoles.find(c => c.emoji === reaction.emoji.name);
+            if (!color) {
+              console.error(`No color role found for emoji ${reaction.emoji.name}`);
+              return;
+            }
+
+            try {
+              // Remove any existing color roles
+              const rolesToRemove = colorRoles
+                .filter(c => c.roleId !== color.roleId)
+                .map(c => c.roleId);
+              await member.roles.remove(rolesToRemove, 'Removed previous color role').catch(console.error);
+
+              // Add the selected color role
+              await member.roles.add(color.roleId, 'Added color role via reaction');
+
+              // Log the role assignment
+              const logEmbed = new EmbedBuilder()
+                .setColor('#' + process.env.EMBEDCOLOR)
+                .setTitle('Color Role Assigned')
+                .addFields(
+                  { name: 'Member', value: `${member.user.tag} (${member.user.id})`, inline: false },
+                  { name: 'Role', value: `<@&${color.roleId}>`, inline: false },
+                  { name: 'Action', value: 'Assigned via reaction', inline: false }
+                )
+                .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
+                .setTimestamp();
+              await sendLog(logEmbed);
+            } catch (error) {
+              console.error(`Failed to assign color role to ${member.user.tag}:`, error);
+            }
+          });
+
+          // Handle reaction removes for color roles
+          client.on('messageReactionRemove', async (reaction, user) => {
+            if (reaction.message.id !== colorRoleMessageId || user.bot) return;
+
+            const guild = reaction.message.guild;
+            const member = await guild.members.fetch(user.id).catch(console.error);
+            if (!member) return;
+
+            const color = colorRoles.find(c => c.emoji === reaction.emoji.name);
+            if (!color) {
+              console.error(`No color role found for emoji ${reaction.emoji.name}`);
+              return;
+            }
+
+            try {
+              // Remove the color role
+              await member.roles.remove(color.roleId, 'Removed color role via reaction removal');
+
+              // Log the role removal
+              const logEmbed = new EmbedBuilder()
+                .setColor('#' + process.env.EMBEDCOLOR)
+                .setTitle('Color Role Removed')
+                .addFields(
+                  { name: 'Member', value: `${member.user.tag} (${member.user.id})`, inline: false },
+                  { name: 'Role', value: `<@&${color.roleId}>`, inline: false },
+                  { name: 'Action', value: 'Removed via reaction', inline: false }
+                )
+                .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
+                .setTimestamp();
+              await sendLog(logEmbed);
+            } catch (error) {
+              console.error(`Failed to remove color role from ${member.user.tag}:`, error);
+            }
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load color role data:', error);
+  }
+
 });
 
 client.on('messageCreate', async message => {
@@ -610,84 +710,6 @@ process.on('SIGINT', async () => {
 process.on('SIGTERM', async () => {
   client.destroy();
   process.exit(0);
-});
-
-// Reaction role handler: Add role
-client.on('messageReactionAdd', async (reaction, user) => {
-  if (user.bot) return; // Ignore bot reactions
-  if (!reaction.message.guild) return; // Ignore DMs
-
-  // Fetch partials if needed
-  if (reaction.partial) await reaction.fetch();
-  if (reaction.message.partial) await reaction.message.fetch();
-
-  // Check if the reaction is on the stored color role message
-  if (
-    !colorRoleMessage ||
-    reaction.message.id !== colorRoleMessage.messageId ||
-    reaction.message.channelId !== colorRoleMessage.channelId ||
-    reaction.message.guildId !== colorRoleMessage.guildId
-  ) return;
-
-  const member = await reaction.message.guild.members.fetch(user.id).catch(console.error);
-  if (!member) return;
-
-  const color = colorRoles.find(c => c.emoji === reaction.emoji.name);
-  if (!color) return;
-
-  try {
-    // Remove any existing color roles
-    const rolesToRemove = colorRoles
-      .filter(c => c.roleId !== color.roleId)
-      .map(c => c.roleId);
-    await member.roles.remove(rolesToRemove, 'Removed previous color role').catch(console.error);
-
-    // Add the selected color role
-    await member.roles.add(color.roleId, 'Added color role via reaction').catch(console.error);
-  } catch (error) {
-    console.error('Error adding color role:', error);
-  }
-});
-
-// Load color role message ID from JSON
-let colorRoleMessage = {};
-const colorRoleFilePath = path.join(__dirname, 'colorrole.json');
-if (fs.existsSync(colorRoleFilePath)) {
-  colorRoleMessage = JSON.parse(fs.readFileSync(colorRoleFilePath, 'utf8'));
-  console.log(`Loaded color role message: ${JSON.stringify(colorRoleMessage)}`);
-} else {
-  console.log('No color role message found. Run /colorrole to set one.');
-}
-
-// Reaction role handler: Remove role
-client.on('messageReactionRemove', async (reaction, user) => {
-  if (user.bot) return; // Ignore bot reactions
-  if (!reaction.message.guild) return; // Ignore DMs
-
-  // Fetch partials if needed
-  if (reaction.partial) await reaction.fetch();
-  if (reaction.message.partial) await reaction.message.fetch();
-
-  // Check if the reaction is on the stored color role message
-  if (
-    !colorRoleMessage ||
-    reaction.message.id !== colorRoleMessage.messageId ||
-    reaction.message.channelId !== colorRoleMessage.channelId ||
-    reaction.message.guildId !== colorRoleMessage.guildId
-  ) return;
-
-  const member = await reaction.message.guild.members.fetch(user.id).catch(console.error);
-  if (!member) return;
-
-  const color = colorRoles.find(c => c.emoji === reaction.emoji.name);
-  if (!color) return;
-
-  try {
-    // Remove the color role
-    await member.roles.remove(color.roleId, 'Removed color role via reaction removal').catch(console.error);
-  } catch (error) {
-    console.error('Error removing color role:', error);
-  }
 });
 
 // Login

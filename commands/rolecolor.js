@@ -5,8 +5,8 @@ const path = require('path');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('colorrole')
-    .setDescription('Choose a color role by reacting to the message!'),
-
+    .setDescription('Set up a color role message that users can react to for a color role'),
+  
   async execute(interaction) {
     await interaction.deferReply(); // Defer reply for processing
 
@@ -20,6 +20,7 @@ module.exports = {
       { name: 'White', emoji: '⚪', roleId: '1349786791829569556' },
     ];
 
+    // Create the color role message
     const embed = new EmbedBuilder()
       .setColor('#' + process.env.EMBEDCOLOR)
       .setTitle('🎨 Choose Your Color Role!')
@@ -30,23 +31,40 @@ module.exports = {
       .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
       .setTimestamp();
 
-    // Send the embed
-    const message = await interaction.editReply({ embeds: [embed], fetchReply: true });
+    try {
+      const message = await interaction.channel.send({ embeds: [embed] });
 
-    // Add reactions in order
-    for (const color of colorRoles) {
-      await message.react(color.emoji).catch(console.error);
+      // Add reactions in order
+      for (const color of colorRoles) {
+        await message.react(color.emoji).catch(console.error);
+      }
+
+      // Store the message ID, channel ID, and guild ID in colorrole.json
+      const colorRoleData = {
+        guildId: interaction.guild.id,
+        channelId: interaction.channel.id,
+        messageId: message.id,
+        colorRoles: colorRoles, // Store the color roles for reference in bot.js
+      };
+
+      const filePath = path.join(__dirname, '..', 'colorrole.json');
+      fs.writeFileSync(filePath, JSON.stringify(colorRoleData, null, 2), 'utf8');
+      console.log(`Stored color role message ID: ${message.id}`);
+
+      const confirmEmbed = new EmbedBuilder()
+        .setColor('#' + process.env.EMBEDCOLOR)
+        .setDescription('Color role message set up! Users can now react to receive a color role.')
+        .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
+        .setTimestamp();
+      await interaction.editReply({ embeds: [confirmEmbed] });
+    } catch (error) {
+      console.error('Failed to set up color role message:', error);
+      const errorEmbed = new EmbedBuilder()
+        .setColor('#' + process.env.EMBEDCOLOR)
+        .setDescription('Failed to set up the color role message. Check my permissions!')
+        .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
+        .setTimestamp();
+      await interaction.editReply({ embeds: [errorEmbed] });
     }
-
-    // Store the message ID in a JSON file
-    const colorRoleData = {
-      guildId: interaction.guild.id,
-      channelId: interaction.channel.id,
-      messageId: message.id,
-    };
-
-    const filePath = path.join(__dirname, '..', 'colorrole.json');
-    fs.writeFileSync(filePath, JSON.stringify(colorRoleData, null, 2), 'utf8');
-    console.log(`Stored color role message ID: ${message.id}`);
   },
 };
