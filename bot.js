@@ -648,6 +648,16 @@ client.on('messageReactionAdd', async (reaction, user) => {
   }
 });
 
+// Load color role message ID from JSON
+let colorRoleMessage = {};
+const colorRoleFilePath = path.join(__dirname, 'colorrole.json');
+if (fs.existsSync(colorRoleFilePath)) {
+  colorRoleMessage = JSON.parse(fs.readFileSync(colorRoleFilePath, 'utf8'));
+  console.log(`Loaded color role message: ${JSON.stringify(colorRoleMessage)}`);
+} else {
+  console.log('No color role message found. Run /colorrole to set one.');
+}
+
 // Reaction role handler: Remove role
 client.on('messageReactionRemove', async (reaction, user) => {
   if (user.bot) return; // Ignore bot reactions
