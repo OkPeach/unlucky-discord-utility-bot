@@ -42,6 +42,18 @@ const sendLog = async (embed) => {
   }
 };
 
+// Define color roles for reaction role handling
+const colorRoles = [
+  { name: 'Black', emoji: '⚫', roleId: '1349785923067576442' },
+  { name: 'Red', emoji: '🔴', roleId: '1349786107847639132' },
+  { name: 'Purple', emoji: '🟣', roleId: '1349786421807943742' },
+  { name: 'Orange', emoji: '🟠', roleId: '1349786354682302596' },
+  { name: 'Green', emoji: '🟢', roleId: '1349786258989383782' },
+  { name: 'Yellow', emoji: '🟡', roleId: '1349786623394578472' },
+  { name: 'White', emoji: '⚪', roleId: '1349786791829569556' },
+];
+
+
 // Bot ready event
 client.once('ready', async () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -597,6 +609,66 @@ process.on('SIGINT', async () => {
 process.on('SIGTERM', async () => {
   client.destroy();
   process.exit(0);
+});
+
+// Reaction role handler: Add role
+client.on('messageReactionAdd', async (reaction, user) => {
+  if (user.bot) return; // Ignore bot reactions
+  if (!reaction.message.guild) return; // Ignore DMs
+
+  // Fetch partials if needed
+  if (reaction.partial) await reaction.fetch();
+  if (reaction.message.partial) await reaction.message.fetch();
+
+  // Check if the reaction is on a message sent by the bot with the color role embed
+  const embed = reaction.message.embeds[0];
+  if (!embed || embed.title !== '🎨 Choose Your Color Role!') return;
+
+  const member = await reaction.message.guild.members.fetch(user.id).catch(console.error);
+  if (!member) return;
+
+  const color = colorRoles.find(c => c.emoji === reaction.emoji.name);
+  if (!color) return;
+
+  try {
+    // Remove any existing color roles
+    const rolesToRemove = colorRoles
+      .filter(c => c.roleId !== color.roleId)
+      .map(c => c.roleId);
+    await member.roles.remove(rolesToRemove, 'Removed previous color role').catch(console.error);
+
+    // Add the selected color role
+    await member.roles.add(color.roleId, 'Added color role via reaction').catch(console.error);
+  } catch (error) {
+    console.error('Error adding color role:', error);
+  }
+});
+
+// Reaction role handler: Remove role
+client.on('messageReactionRemove', async (reaction, user) => {
+  if (user.bot) return; // Ignore bot reactions
+  if (!reaction.message.guild) return; // Ignore DMs
+
+  // Fetch partials if needed
+  if (reaction.partial) await reaction.fetch();
+  if (reaction.message.partial) await reaction.message.fetch();
+
+  // Check if the reaction is on a message sent by the bot with the color role embed
+  const embed = reaction.message.embeds[0];
+  if (!embed || embed.title !== '🎨 Choose Your Color Role!') return;
+
+  const member = await reaction.message.guild.members.fetch(user.id).catch(console.error);
+  if (!member) return;
+
+  const color = colorRoles.find(c => c.emoji === reaction.emoji.name);
+  if (!color) return;
+
+  try {
+    // Remove the color role
+    await member.roles.remove(color.roleId, 'Removed color role via reaction removal').catch(console.error);
+  } catch (error) {
+    console.error('Error removing color role:', error);
+  }
 });
 
 // Login
