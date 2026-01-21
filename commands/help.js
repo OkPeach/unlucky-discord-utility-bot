@@ -20,11 +20,11 @@ module.exports = {
         },
         { 
           name: '<a:ConfettiPopper:1349062013351100486> Fun', 
-          value: '`/8ball` - Ask the Magic 8 Ball a question\n`/chucknorris` - Get a Chuck Norris joke\n`/quote` - Get an inspirational quote\n`/coinflip` - Flip a coin\n`/roll` - Roll dice (e.g., 1d6, 2d20)\n`/meme` - Get a random meme\n`/penis` - Penis size' 
+          value: '`/8ball` - Ask the Magic 8 Ball a question\n`/chucknorris` - Get a Chuck Norris joke\n`/quote` - Get an inspirational quote\n`/ye` - Get a KanYE quote\n`/coinflip` - Flip a coin\n`/roll` - Roll dice (e.g., 1d6, 2d20)\n`/meme` - Get a random meme\n`/penis` - Penis size' 
         },
         {
           name: '<a:neko_gasp:1349061996615696465> Images',
-          value: '`/cat` - Get a random cat image\n`/dog` - Get a random dog image\n`/catgirl` - Get a random anime-style catgirl'
+          value: '`/cat` - Get a random cat image\n`/dog` - Get a random dog image\n`/catgirl` - Get a random anime-style catgirl <a:eat:1463616111479230767>'
         },
         {
           name: '<a:PenguBitcoin:1349061239845818489> Crypto',

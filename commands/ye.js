@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('quote')
+    .setName('Ye')
     .setDescription('Get a random Kanye West quote'),
   async execute(interaction) {
     try {
