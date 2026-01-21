@@ -14,7 +14,7 @@ module.exports = {
 
       const embed = new EmbedBuilder()
         .setColor('#' + process.env.EMBEDCOLOR)
-        .setTitle('💡 Inspirational Quote')
+        .setTitle('🐻 Kanye Quote')
         .setDescription(`"${quoteText}"\n— ${quoteAuthor}`)
         .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
         .setTimestamp();
