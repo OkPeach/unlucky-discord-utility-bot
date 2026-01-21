@@ -288,6 +288,12 @@ client.on('messageCreate', async message => {
     'edík': '<:Eda:1349103425312522321>',
     'bobinka': '<:Bobinka:1349103208751956029>',
     'dix': '<:Dixa:1349103200275533898>',
+    'nigga': '🇳',
+    'nigga': '🇮',
+    'nigga': '🇬',
+    'nigga': '🇬',
+    'nigga': '🇦',
+    'kevin': '<:kevinSus:1120097901931147385>',
   };
 
   // Check for names in the message content and react with corresponding emoji
