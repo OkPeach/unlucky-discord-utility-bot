@@ -288,18 +288,20 @@ client.on('messageCreate', async message => {
     'edík': '<:Eda:1349103425312522321>',
     'bobinka': '<:Bobinka:1349103208751956029>',
     'dix': '<:Dixa:1349103200275533898>',
-    'nigga': ['🇳', '🇮', '🇬', '🇬', '🇦'],
+    'nigga': ['🇳','🇮','🇬','🇬','🇦'],
     'kevin': '<:kevinSus:1120097901931147385>',
   };
 
   // Check for names in the message content and react with corresponding emoji
   for (const [name, emoji] of Object.entries(nameToEmojiMap)) {
     if (messageContent.includes(name)) {
+      for (const emoji of Array.isArray(emoji) ? emoji : [emoji]) {
       try {
         await message.react(emoji);
-      } catch (error) {
-        console.error(`Failed to react with ${name} emoji:`, error);
+      } catch (e) {
+        console.error(`Failed to react with ${emoji}:`, e);
       }
+    }
     }
   }
 });

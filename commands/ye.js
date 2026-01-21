@@ -3,18 +3,19 @@ const fetch = require('node-fetch');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('dog')
-    .setDescription('Get a random dog image'),
+    .setName('quote')
+    .setDescription('Get a random Kanye West quote'),
   async execute(interaction) {
     try {
-      const response = await fetch('https://dog.ceo/api/breeds/image/random');
+      const response = await fetch('https://api.kanye.rest/');
       const data = await response.json();
-      const dogImage = data.message;
+      const quoteText = data.quote;
+      const quoteAuthor = 'KanYe';
 
       const embed = new EmbedBuilder()
         .setColor('#' + process.env.EMBEDCOLOR)
-        .setTitle('🐶 Random Dog')
-        .setImage(dogImage)
+        .setTitle('💡 Inspirational Quote')
+        .setDescription(`"${quoteText}"\n— ${quoteAuthor}`)
         .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
         .setTimestamp();
       await interaction.reply({ embeds: [embed] });
@@ -22,7 +23,7 @@ module.exports = {
       console.error(error);
       const embed = new EmbedBuilder()
         .setColor('#' + process.env.EMBEDCOLOR)
-        .setDescription('Failed to fetch a dog image. Try again later!')
+        .setDescription('Failed to fetch a quote. Try again later!')
         .setFooter({ text: 'Unlucky bot | Made by unlucky.life' })
         .setTimestamp();
       await interaction.reply({ embeds: [embed], ephemeral: true });
