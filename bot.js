@@ -288,22 +288,29 @@ client.on('messageCreate', async message => {
     'edík': '<:Eda:1349103425312522321>',
     'bobinka': '<:Bobinka:1349103208751956029>',
     'dix': '<:Dixa:1349103200275533898>',
-    'nigga': ['🇳','🇮','🇬','🇬','🇦'],
+    'nigga': [
+              '<:N_:1463613760089489531>',
+              '<:I_:1463613791957811251>',
+              '<:G_:1463613799918600407>',
+              '<:G2_:1463615050773168250>',
+              '<:A_:1463613787306332416>'
+            ],
     'kevin': '<:kevinSus:1120097901931147385>',
   };
 
   // Check for names in the message content and react with corresponding emoji
-  for (const [name, emoji] of Object.entries(nameToEmojiMap)) {
-    if (messageContent.includes(name)) {
-      for (const emoji of Array.isArray(emoji) ? emoji : [emoji]) {
+  for (const [name, emojiOrEmojis] of Object.entries(nameToEmojiMap)) {
+  if (messageContent.includes(name)) {
+    const emojis = Array.isArray(emojiOrEmojis) ? emojiOrEmojis : [emojiOrEmojis];
+    for (const emoji of emojis) {
       try {
         await message.react(emoji);
-      } catch (e) {
-        console.error(`Failed to react with ${emoji}:`, e);
+      } catch (error) {
+        console.error(`Failed to react with ${name} emoji (${emoji}):`, error);
+      }
       }
     }
-    }
-  }
+  };
 });
 
 // Log message deletions

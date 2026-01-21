@@ -1,5 +1,5 @@
 //token time
-require('dotenv').config();
+import dotenv from 'dotenv'; dotenv.config();
 const TOKEN = process.env.TOKEN;
 
 //prefix
@@ -1149,7 +1149,7 @@ client.on('messageCreate', async message => {
     //servers command
     if (command === 'server') {
         const embedMessage =  new Discord.MessageEmbed();
-        const fs = require('fs');
+        import fs from 'fs';
 
         isServer = false;
 
