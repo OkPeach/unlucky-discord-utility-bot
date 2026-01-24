@@ -313,6 +313,13 @@ client.on('messageCreate', async message => {
   };
 });
 
+
+//mimic reactions
+client.on('messageReactionAdd', async (reaction, user) => {
+  if (user.bot) return;
+  await reaction.message.react(reaction.emoji);
+});
+
 // Log message deletions
 client.on('messageDelete', async (message) => {
   if (message.author.bot) return; // Ignore bot messages
